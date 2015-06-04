@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>ismac</name>
+  <version>0.1.1</version>
+  <description>The action mission monitor package</description>
+
+  <maintainer email="christophe.grand@onera.fr">Christophe Grand</maintainer>
+  <license>LGPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+</package>
