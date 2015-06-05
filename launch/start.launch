@@ -1,0 +1,5 @@
+<launch>
+  <arg name="mission_file" />
+  <node name="$(anon yarp_ros_conv)" pkg="ismac" type="yarp_ros_conv" />
+  <node name="$(anon ismac_monitor)" pkg="ismac" type="monitor" args="$(arg mission_file)"/>
+</launch>

@@ -1,0 +1,9 @@
++ Ajout control panel
+  - Start mission
+  - Robot mort
+  - Log
+  - Trace déplacement
+
++ Launch file
+  + Integration yarp-ros converter (avec option)
+  + Lien avec mission.launch   
