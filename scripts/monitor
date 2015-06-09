@@ -8,6 +8,7 @@ import json
 from PySide import QtGui, QtCore
 
 class Viewer(QtGui.QWidget):
+
     def __init__(self, a_map, x_0, y_0, x_size, y_size):
         super(Viewer, self).__init__()
 
@@ -174,7 +175,7 @@ class Viewer(QtGui.QWidget):
 
 #------------------------------------------------------------------------------
 class Agent:
-    def __init__(self, gui, name, color, y=0):
+    def __init__(self, name, color, y=0):
         self.name = name
         self.x = 0
         self.y = y
@@ -259,7 +260,7 @@ def main():
     agents_list = mission['agents']
     for agent, props in agents_list.iteritems():        
         print('Add agent: '+agent+"\t"+props['color'])
-        gui.add_agent(Agent(gui, agent, agents_list[agent]['color']))
+        gui.add_agent(Agent(agent, agents_list[agent]['color']))
         
     app.exec_()
     
