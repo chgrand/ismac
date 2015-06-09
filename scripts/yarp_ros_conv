@@ -11,15 +11,16 @@ verbose = False
 
 ###
 
+rospy.init_node('ressac_pose')
+
 
 # Yarp config
 yarpNetwork = yarp.Network()
 
 if not yarpNetwork.checkNetwork():
-    print("Connection to yarp failed")
-    print("Yarp ROS conversion not activated")
-    sys.exit(1)
-
+    rospy.logerr("Connection to yarp failed")
+    rospy.logerr("Ressac Yarp-ROS conversion is not activated")
+    rospy.signal_shutdown("YARP server unreachable")
 
 ressac_1_pos_in_port=yarp.BufferedPortBottle()
 ressac_1_pos_in_port.open("/morse/ressac/23/teleport/in")
@@ -31,7 +32,6 @@ ressac_2_pos_in_port.open("/morse/ressac/26/teleport/in")
 
 
 # ROS config
-rospy.init_node('ressac_pose')
 ressac_1_pub = rospy.Publisher("/ressac1/pose", PoseStamped, queue_size = 1)
 ressac_2_pub = rospy.Publisher("/ressac2/pose", PoseStamped, queue_size = 1)
 ressac_1_pose = PoseStamped()
