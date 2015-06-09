@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 import rospy
 from geometry_msgs.msg import PoseStamped
 import sys, os, time
@@ -15,6 +14,12 @@ verbose = False
 
 # Yarp config
 yarpNetwork = yarp.Network()
+
+if not yarpNetwork.checkNetwork():
+    print("Connection to yarp failed")
+    print("Yarp ROS conversion not activated")
+    sys.exit(1)
+
 
 ressac_1_pos_in_port=yarp.BufferedPortBottle()
 ressac_1_pos_in_port.open("/morse/ressac/23/teleport/in")
