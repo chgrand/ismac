@@ -7,7 +7,7 @@ import yarp
 
 ### Global option
 
-verbose = False
+verbose = True #False
 
 ###
 
@@ -31,7 +31,8 @@ ressac_2_pos_in_port.open("/morse/ressac/23/teleport/in")
 #yarp.Network.connect("/morse/ressac/26/teleport/in", "/monitor/ressac_2/pose/in")
 
 target_pos_in = yarp.BufferedPortBottle()
-target_pos_in.open('/morse/target/teleport/in')
+target_pos_in.open('/ros/target/state')
+yarp.Network.connect('/target/state', '/ros/target/state')
 
 
 # ROS config
@@ -40,7 +41,7 @@ ressac_2_pub = rospy.Publisher("/ressac2/pose", PoseStamped, queue_size = 1)
 target_pub   = rospy.Publisher("/target/pose", PoseStamped, queue_size = 1)
 ressac_1_pose = PoseStamped()
 ressac_2_pose = PoseStamped()
-target_pose   = PsoeStamped()
+target_pose   = PoseStamped()
 
 
 while not rospy.is_shutdown():
