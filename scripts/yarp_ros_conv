@@ -23,11 +23,11 @@ if not yarpNetwork.checkNetwork():
     rospy.signal_shutdown("YARP server unreachable")
 
 ressac_1_pos_in_port=yarp.BufferedPortBottle()
-ressac_1_pos_in_port.open("/morse/ressac/23/teleport/in")
+ressac_1_pos_in_port.open("/morse/ressac/26/teleport/in")
 #yarp.Network.connect("/morse/ressac/23/teleport/in", "/monitor/ressac_1/pose/in")
 
 ressac_2_pos_in_port=yarp.BufferedPortBottle()
-ressac_2_pos_in_port.open("/morse/ressac/26/teleport/in")
+ressac_2_pos_in_port.open("/morse/ressac/23/teleport/in")
 #yarp.Network.connect("/morse/ressac/26/teleport/in", "/monitor/ressac_2/pose/in")
 
 
