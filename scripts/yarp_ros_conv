@@ -11,7 +11,7 @@ verbose = False
 
 ###
 
-rospy.init_node('ressac_pose')
+rospy.init_node('ressac_pose_conv')
 
 
 # Yarp config
@@ -30,12 +30,18 @@ ressac_2_pos_in_port=yarp.BufferedPortBottle()
 ressac_2_pos_in_port.open("/morse/ressac/26/teleport/in")
 #yarp.Network.connect("/morse/ressac/26/teleport/in", "/monitor/ressac_2/pose/in")
 
+target_pos_in = yarp.BufferedPortBottle()
+target_pos_in.open('/morse/target/teleport/in')
+
 
 # ROS config
 ressac_1_pub = rospy.Publisher("/ressac1/pose", PoseStamped, queue_size = 1)
 ressac_2_pub = rospy.Publisher("/ressac2/pose", PoseStamped, queue_size = 1)
+target_pub   = rospy.Publisher("/target/pose", PoseStamped, queue_size = 1)
 ressac_1_pose = PoseStamped()
 ressac_2_pose = PoseStamped()
+target_pose   = PsoeStamped()
+
 
 while not rospy.is_shutdown():
     time.sleep(.2)
@@ -50,7 +56,7 @@ while not rospy.is_shutdown():
         ressac_1_pose.pose.position.z = -z_pos
         ressac_1_pub.publish(ressac_1_pose)
         if verbose:
-            print("ressac_1 : ({0:.2f}, {1:.2f})".format(x_pos, y_pos))
+            print("ressac_1 : ({0:.2f}, {1:.2f})".format(y_pos, x_pos))
         
     btl = ressac_2_pos_in_port.read(False)
     if btl!=None:
@@ -62,5 +68,17 @@ while not rospy.is_shutdown():
         ressac_2_pose.pose.position.z = -z_pos
         ressac_2_pub.publish(ressac_2_pose)
         if verbose:
-            print("ressac_2 : ({0:.2f}, {1:.2f})".format(x_pos, y_pos))
+            print("ressac_2 : ({0:.2f}, {1:.2f})".format(y_pos, x_pos))
+            
+    btl = target_pos_in.read(False)
+    if btl!=None:
+        x_pos = btl.get(0).asDouble()
+        y_pos = btl.get(1).asDouble()
+        z_pos = btl.get(2).asDouble()
+        target_pose.pose.position.x = y_pos
+        target_pose.pose.position.y = x_pos
+        target_pose.pose.position.z = -z_pos
+        target_pub.publish(target_pose)
+        if verbose:
+            print("target : ({0:.2f}, {1:.2f})".format(y_pos, x_pos))
             
