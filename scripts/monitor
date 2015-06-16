@@ -5,8 +5,8 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 import os, sys
 import json
-from PySide import QtGui, QtCore
-from map_viewer import Viewer
+from PySide import QtGui
+from map_viewer import MapViewer
 
 
 #------------------------------------------------------------------------------
@@ -37,7 +37,37 @@ class Agent:
 
     def getColor(self):
         return self.color
+
+
+#------------------------------------------------------------------------------
+class MainWin(QtGui.QWidget):
+
+    def __init__(self, map_viewer_):
+        super(MainWin, self).__init__()
+
+        button_start = QtGui.QPushButton("Start mission")
+        button_logpose = QtGui.QPushButton("Log pose")
+        button_start.setWidth=180
+        button_logpose.setMaximumWidth=180
+        
+        
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(button_start)
+        vbox.addWidget(button_logpose)
+        vbox.addStretch(1)
+        
+
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(map_viewer_)
+        hbox.addLayout(vbox)
+
     
+        self.setLayout(hbox)
+        self.setGeometry(200, 200, 500, 400) #int(y_size*500/x_size))
+        self.setWindowTitle('ISMAC')
+        self.show()
+
+        
 
 #------------------------------------------------------------------------------
 def main():
@@ -79,7 +109,7 @@ def main():
     # Start application and widgets
     app = QtGui.QApplication(sys.argv)
     map_viewer = MapViewer(image, x_0, y_0, dx, dy)
-
+    main_window = MainWin(map_viewer)
 
     
     # Start ros node
@@ -89,7 +119,7 @@ def main():
     agents_list = mission['agents']
     for agent, props in agents_list.iteritems():        
         print('Add agent: '+agent+"\t"+props['color'])
-        gui.add_agent(Agent(agent, agents_list[agent]['color']))
+        map_viewer.add_agent(Agent(agent, agents_list[agent]['color']))
         
     app.exec_()
     

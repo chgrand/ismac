@@ -6,10 +6,10 @@
 import os, sys
 from PySide import QtGui, QtCore
 
-class Viewer(QtGui.QWidget):
+class MapViewer(QtGui.QWidget):
 
     def __init__(self, a_map, x_0, y_0, x_size, y_size):
-        super(Viewer, self).__init__()
+        super(MapViewer, self).__init__()
 
         self.map_image = a_map
         # Relation between map pixel and meters
@@ -31,9 +31,9 @@ class Viewer(QtGui.QWidget):
         self.move_map = False
 
         # Create widget
-        self.setGeometry(200, 200, 500, int(y_size*500/x_size))
-        self.setWindowTitle('ISMAC')
-        self.show()
+        #self.setGeometry(200, 200, 500, int(y_size*500/x_size))
+        #self.setWindowTitle('ISMAC')
+        #self.show()
 
                 
     def add_agent(self, agent):
