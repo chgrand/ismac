@@ -65,7 +65,8 @@ class MainWin(QtGui.QWidget):
 
     def __init__(self, map_viewer_):
         super(MainWin, self).__init__()
-        self.hidden_start_pub = rospy.Publisher('/hidden/start', Empty, queue_size = 1)
+        self.hidden_start_pub = rospy.Publisher('/hidden/start', Empty, 
+                                                queue_size = 1)
         self.create_ui(map_viewer_)
         
     def cb_start_mission(self):
@@ -77,10 +78,10 @@ class MainWin(QtGui.QWidget):
         if self.sender().isChecked():
             self.sender().setStyleSheet("background-color: red")
             self.sender().setText('Log pose ON')            
-            bag_name = time.strftime('%Y-%m-%d-%H-%M-%S')+'_'+mission_name+'_poses.bag'
+            bag_name = bag_dir+'/'+time.strftime('%Y-%m-%d-%H-%M-%S')+'_'+mission_name+'_poses.bag'
             bag = rosbag.Bag(bag_name, 'w')
             bag_record = True            
-            logger.info("Start pose Log")
+            logger.info("Start pose Log on file %s" % bag_name)
         else:
             self.sender().setStyleSheet("background-color: lightgrey")
             self.sender().setText('Log pose OFF')
@@ -183,7 +184,7 @@ class MainWin(QtGui.QWidget):
 
 #------------------------------------------------------------------------------
 def main():
-    global mission_name
+    global mission_name, bag_dir
     
     if len(sys.argv) < 2:
         print("usage: {0} mission_filename.json".format(sys.argv[0]))
@@ -194,12 +195,14 @@ def main():
     mission_name = sys.argv[1].split('/')[-1].split('.')[0]
     print('Mission name = ' + mission_name)
 
+    bag_dir = os.environ['HOME']
 
     # Get hom_dir and check env variable to build path
     home_dir = ''
     for s in mission["home_dir"].split('/'):
-        if s[0]=='$' :            
+        if s[0]=='$' :
             home_dir += os.environ[s[1:]]+'/'
+            bag_dir = os.environ[s[1:]]
         else:
             home_dir += s+'/' 
 
