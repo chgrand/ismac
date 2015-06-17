@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-#import rospy
-#from sensor_msgs.msg import NavSatFix
-#from geometry_msgs.msg import PoseStamped
-import os, sys
+#import os, sys
 from PySide import QtGui, QtCore
 
 class MapViewer(QtGui.QWidget):
@@ -29,12 +26,6 @@ class MapViewer(QtGui.QWidget):
 
         # IHM action
         self.move_map = False
-
-        # Create widget
-        #self.setGeometry(200, 200, 500, int(y_size*500/x_size))
-        #self.setWindowTitle('ISMAC')
-        #self.show()
-
                 
     def add_agent(self, agent):
         self.agents_list.append(agent)
