@@ -10,12 +10,17 @@ import json
 from PySide import QtGui
 from map_viewer import MapViewer
 import time
-import logging; 
+import logging
+
+## Global properties
 
 logger = logging.getLogger("ismac")
-
-logger.info("Une info")
-logger.warning('un warning')
+ch = logging.StreamHandler()
+logger.addHandler(ch)
+cf = logging.Formatter('[%(asctime)s][%(levelname)s] (%(name)s): %(message)s')
+ch.setFormatter(cf)
+logger.setLevel(logging.INFO)
+logger.info("ismac started")
 
 bag_record = False
 bag = None
@@ -83,41 +88,47 @@ class MainWin(QtGui.QWidget):
             bag.close()
             logger.info("Stop pose Log")
 
+    def send_alea(self, agent, alea, parameter):
+        # rosservice to send alea to agent
+        logger.info('Send alea : [%s , %s]' % (alea, parameter))
+        serviceProxy = rospy.ServiceProxy('/'+agent+'/alea', AleaAction)
+        resp = serviceProxy(alea, parameter)
+        if resp.success:
+            logger.info('[%s] alea service ACK ' % agent)
+        else:
+            logger.warning('[%s] alea service NOT ACK ' % agent)
+        
+
     def cb_kill_robot(self):
-        killed = self.comboBoxKilled.currentText()
-        informed = self.comboBoxInformed.currentText()
-        logger.info('Kill {0} and inform {1}'.format(killed, informed))
+        killed_agent = self.comboBoxKilled.currentText()
+        informed_agent = self.comboBoxInformed.currentText()
+        logger.info('Kill {0} and inform {1}'.format(killed_agent, informed_agent))
+        self.send_alea(killed_agent, 'robotDead', '{"robot":"'+killed_agent+'"}')
+        self.send_alea(informed_agent, 'robotDead', '{"robot":"'+killed_agent+'"}')
 
-        # rosservice to send alea to killed robot
-        serviceProxy = rospy.ServiceProxy('/'+killed+'/alea', AleaAction)
-        resp = serviceProxy('robotDead', '{"robot":"'+killed+'"}')
-        if resp.success:
-            logger.info('[%s] alea service ACK ' % killed)
-        else:
-            logger.warning('[%s] alea service NOT ACK ' % killed)
+    def cb_STN_update(self):
+        agent = self.comboBoxAgent.currentText()
+        self.send_alea(agent, 'sendMastn', '{}')
 
-        # rosservice to send alea to informed robot
-        serviceProxy = rospy.ServiceProxy('/'+informed+'/alea', AleaAction)
-        resp = serviceProxy('robotDead', '{"robot":"'+killed+'"}')
-        if resp.success:
-            logger.info('[%s] alea service ACK ' % informed)
-        else:
-            logger.warning('[%s] alea service NOT ACK ' % informed)
-
+    def cb_force_repair(self):
+        agent = self.comboBoxAgent.currentText()
+        self.send_alea(agent, 'repair', '{}')
+        
 
     def add_agent(self, name):
         self.comboBoxKilled.addItem(name)
         self.comboBoxInformed.addItem(name)
+        self.comboBoxAgent.addItem(name)
         
     def create_ui(self, map_viewer_):
         vbox = QtGui.QVBoxLayout()
         btn = QtGui.QPushButton("Start mission")
-        btn.setMinimumHeight(40)
+        btn.setMinimumHeight(32)
         btn.clicked.connect(self.cb_start_mission)
         vbox.addWidget(btn)
         
         btn = QtGui.QPushButton("Log poses OFF")
-        btn.setMinimumHeight(40)
+        btn.setMinimumHeight(32)
         btn.setCheckable(True)
         btn.toggled.connect(self.cb_log_poses)
         vbox.addWidget(btn)
@@ -129,12 +140,29 @@ class MainWin(QtGui.QWidget):
         vbox.addWidget(QtGui.QLabel('Informed robot:'))
         self.comboBoxInformed = QtGui.QComboBox()
         vbox.addWidget(self.comboBoxInformed)                
-        vbox.addSpacing(12)
         
         btn = QtGui.QPushButton("Kill !!!")
-        btn.setMinimumHeight(40)
+        btn.setMinimumHeight(32)
         btn.clicked.connect(self.cb_kill_robot)
         vbox.addWidget(btn)
+        vbox.addSpacing(32)
+
+        vbox.addWidget(QtGui.QLabel('Action on agent:'))
+        self.comboBoxAgent = QtGui.QComboBox()
+        vbox.addWidget(self.comboBoxAgent)                
+        
+        btn = QtGui.QPushButton("STN update")
+        btn.clicked.connect(self.cb_STN_update)
+        vbox.addWidget(btn)
+
+        btn = QtGui.QPushButton("Force repair")
+        btn.clicked.connect(self.cb_force_repair)
+        vbox.addWidget(btn)
+
+        #btn = QtGui.QPushButton("Target found")
+        #btn.clicked.connect(self.cb_kill_robot)
+        #vbox.addWidget(btn)
+
         vbox.addStretch(1)
         
         group = QtGui.QGroupBox()
@@ -201,7 +229,7 @@ def main():
 
     
     # Start ros node
-    rospy.init_node('ISMAC', anonymous=True)
+    rospy.init_node('ISMAC')#, anonymous=True)
 
     ## Analyse and add list of agents
     agents_list = mission['agents']
