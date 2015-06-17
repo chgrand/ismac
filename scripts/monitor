@@ -3,16 +3,19 @@
 import rospy
 import rosbag
 from std_msgs.msg import Empty
-#from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import PoseStamped
 from metal.srv import AleaAction
-
 import os, sys
-import subprocess #, signal
 import json
 from PySide import QtGui
 from map_viewer import MapViewer
 import time
+import logging; 
+
+logger = logging.getLogger("ismac")
+
+logger.info("Une info")
+logger.warning('un warning')
 
 bag_record = False
 bag = None
@@ -58,12 +61,11 @@ class MainWin(QtGui.QWidget):
     def __init__(self, map_viewer_):
         super(MainWin, self).__init__()
         self.hidden_start_pub = rospy.Publisher('/hidden/start', Empty, queue_size = 1)
-        self.aleaProxy =dict()
         self.create_ui(map_viewer_)
         
     def cb_start_mission(self):
         self.hidden_start_pub.publish(Empty())
-        rospy.loginfo("Start mission")
+        logger.info("Start mission")
         
     def cb_log_poses(self):
         global bag, bag_record, mission_name
@@ -73,27 +75,39 @@ class MainWin(QtGui.QWidget):
             bag_name = time.strftime('%Y-%m-%d-%H-%M-%S')+'_'+mission_name+'_poses.bag'
             bag = rosbag.Bag(bag_name, 'w')
             bag_record = True            
-            rospy.loginfo("Start pose Log")
+            logger.info("Start pose Log")
         else:
             self.sender().setStyleSheet("background-color: lightgrey")
             self.sender().setText('Log pose OFF')
             bag_record = False
             bag.close()
-            rospy.loginfo("Stop pose Log")
+            logger.info("Stop pose Log")
 
     def cb_kill_robot(self):
         killed = self.comboBoxKilled.currentText()
         informed = self.comboBoxInformed.currentText()
-        rospy.loginfo('Kill {0} and inform {1}'.format(killed, informed))
-        data = '!!str "{\"robot\":\"'+killed+'\"}"'
-        self.aleaProxy[killed]('robotDead', data)
-        self.aleaProxy[informed]('robotDead', data)
+        logger.info('Kill {0} and inform {1}'.format(killed, informed))
+
+        # rosservice to send alea to killed robot
+        serviceProxy = rospy.ServiceProxy('/'+killed+'/alea', AleaAction)
+        resp = serviceProxy('robotDead', '{"robot":"'+killed+'"}')
+        if resp.success:
+            logger.info('[%s] alea service ACK ' % killed)
+        else:
+            logger.warning('[%s] alea service NOT ACK ' % killed)
+
+        # rosservice to send alea to informed robot
+        serviceProxy = rospy.ServiceProxy('/'+informed+'/alea', AleaAction)
+        resp = serviceProxy('robotDead', '{"robot":"'+killed+'"}')
+        if resp.success:
+            logger.info('[%s] alea service ACK ' % informed)
+        else:
+            logger.warning('[%s] alea service NOT ACK ' % informed)
+
 
     def add_agent(self, name):
         self.comboBoxKilled.addItem(name)
         self.comboBoxInformed.addItem(name)
-        self.aleaProxy[name] = rospy.ServiceProxy('/'+name+'/alea', AleaAction)
-
         
     def create_ui(self, map_viewer_):
         vbox = QtGui.QVBoxLayout()
@@ -134,7 +148,7 @@ class MainWin(QtGui.QWidget):
         hbox.addWidget(group)
 
         self.setLayout(hbox)
-        self.setGeometry(200, 200, 500, 400) #int(y_size*500/x_size))
+        self.setGeometry(500, 400, 900, 600) #int(y_size*500/x_size))
         self.setWindowTitle('ISMAC')
         self.show()
 
