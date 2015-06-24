@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+import rospy
+import rosbag
+from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
+import json
+import logging
+
+
+
+class AgentConverter:
+    def __init__(self, name):
+        rospy.Subscriber("/"+name+"/pose", PoseStamped, self.callback)
+        self.pub = rospy.Publisher('/'+name+'/teleport', Pose, queue_size = 1)
+        
+    def callback(self, pose_stamped):
+        pose = Pose()
+        pose.position = pose_stamped.pose.position
+        pose.orientation = pose_stamped.pose.orientation
+        self.pub.publish(pose)
+
+
+if __name__ == '__main__':
+
+    agents_list = ['ressac1', 'ressac2', 'mana', 'minnie']
+    rospy.init_node('pose2teleport')
+    rospy.loginfo("Node pose2teleop started")
+    
+    for agent in agents_list:
+        AgentConverter(agent)
+        
+    rospy.spin()
+
+
