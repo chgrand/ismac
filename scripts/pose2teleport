@@ -24,15 +24,16 @@ class AgentConverter:
 if __name__ == '__main__':
 
     rospy.init_node('pose2teleport')
-    if(len(sys.argv)<2):
+    argv = rospy.myargv()
+    if(len(argv)<2):
         rospy.logerr("pose2teleop need name of agents as arguments")
         sys.exit()
     else:
         agents_list = []
-        for agent in sys.argv[1:]:
+        for agent in argv[1:]:
             agents_list.append(agent)
         print(agents_list)
-        rospy.loginfo("Node pose2teleop started")
+        rospy.loginfo("node pose2teleop started")
         
         for agent in agents_list:
             AgentConverter(agent)
