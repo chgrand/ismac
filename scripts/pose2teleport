@@ -4,9 +4,9 @@ import rospy
 import rosbag
 from geometry_msgs.msg import Pose
 from geometry_msgs.msg import PoseStamped
+import sys
 import json
 import logging
-
 
 
 class AgentConverter:
@@ -23,13 +23,18 @@ class AgentConverter:
 
 if __name__ == '__main__':
 
-    agents_list = ['ressac1', 'ressac2', 'mana', 'minnie']
     rospy.init_node('pose2teleport')
-    rospy.loginfo("Node pose2teleop started")
-    
-    for agent in agents_list:
-        AgentConverter(agent)
+    if(len(sys.argv)<2):
+        rospy.logerr("pose2teleop need name of agents as arguments")
+        sys.exit()
+    else:
+        agents_list = []
+        for agent in sys.argv[1:]:
+            agents_list.append(agent)
+        print(agents_list)
+        rospy.loginfo("Node pose2teleop started")
         
-    rospy.spin()
-
-
+        for agent in agents_list:
+            AgentConverter(agent)
+            
+        rospy.spin()
