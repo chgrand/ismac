@@ -243,9 +243,10 @@ def main():
         main_window.add_agent(agent)
 
     ## Analyse and add list of targets as agents in map_viewer only
-    for target, props in mission['targets'].iteritems():        
-        print('Add target: '+target+"\t"+props['color'])
-        map_viewer.add_agent(Agent(target, props['color']))
+    if 'targets' in mission:
+        for target, props in mission['targets'].iteritems():
+            print('Add target: '+target+"\t"+props['color'])
+            map_viewer.add_agent(Agent(target, props['color']))
 
 
     app.exec_()
