@@ -76,7 +76,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.mapViewer.init(image, x_0, y_0, dx, dy)
                 
         for cbox in [self.ui.killedRobotBox, self.ui.warnedKilledRobotBox, self.ui.vnetRobotBox, self.ui.targetRobotBox, self.ui.debugRobotBox]:
-            for r in robots.keys():
+            for r in sorted(robots.keys()):
                 cbox.addItem(r)
                 
         for agent,props in robots.items():
@@ -167,7 +167,7 @@ class MainWindow(QtGui.QMainWindow):
         if not y:
             y = "-9"
         logger.info('Robot {0} will see the target at ({1},{2})'.format(robot,x,y))
-        self.send_alea(robot, 'targetFound', """{"position":{"x":%f,"y":%f}""" % (float(x),float(y)))
+        self.send_alea(robot, 'targetFound', """{"position":{"x":%f,"y":%f}}""" % (float(x),float(y)))
     
     def cb_debug_state(self):
         robot = self.ui.debugRobotBox.currentText()
