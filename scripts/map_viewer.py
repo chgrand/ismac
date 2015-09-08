@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#import os, sys
+import time
 from PySide import QtGui, QtCore
 
 class MapViewer(QtGui.QWidget):
@@ -30,7 +30,10 @@ class MapViewer(QtGui.QWidget):
         
         self.opacity = 0.7
         
-        self.cb_click = cb_click
+        self.cb_click = cb_click #Callback for displaying x,y when clicked
+        
+        self.draw_coms = True
+        self.coms = []
     
     def set_opacity(self, value):
         v = float(value)/100  #Assume value in %
@@ -39,7 +42,17 @@ class MapViewer(QtGui.QWidget):
             self.update()
         else:
             print("%s is not a valid opacity" % value)
-                
+    
+    def set_draw_com(self, b):
+        if b:
+            print("Drawing the coms")
+        else:
+            print("Stop drawing the coms")
+        self.draw_coms = b
+        
+    def add_com(self, robotFrom, robotTo, color="green"):
+        self.coms.append({"from":robotFrom, "to":robotTo, "time":time.time(), "color":color})
+    
     def add_agent(self, agent):
         self.agents_list.append(agent)
         agent.set_gui(self)
@@ -54,6 +67,8 @@ class MapViewer(QtGui.QWidget):
         painter.translate(-self.viewport_origin_x, -self.viewport_origin_y)
         painter.drawImage(0, 0, self.map_image)
         painter.restore()    
+
+        pos = {}
 
         for agent in self.agents_list:
             (x, y) = self.viewport_from_map_mt( *agent.get_pos() )
@@ -78,6 +93,20 @@ class MapViewer(QtGui.QWidget):
             painter.drawText(x+12, y-12, agent.get_name())
             painter.restore()
             
+            pos[agent.get_name()] = (x,y)
+        
+        if self.draw_coms:
+            #print("Drawing %s links" % len(self.coms))
+            for d in self.coms:
+                r1,r2 = d["from"],d["to"]
+                color = QtGui.QColor(QtGui.QColor(d["color"]))
+                pen = QtGui.QPen(color, 3, QtCore.Qt.SolidLine)            
+                painter.setPen(pen)
+                painter.setOpacity(.5 * (1 - (time.time() - d["time"])/5))
+                painter.drawLine(pos[r1][0], pos[r1][1], pos[r2][0], pos[r2][1])
+                
+            self.coms = [d for d in self.coms if time.time() < d["time"] + 5]
+        
         painter.end()
 
     def plotMark(self, painter, x, y, mark='x', size=12):

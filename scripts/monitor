@@ -90,7 +90,7 @@ class MainWindow(QtGui.QMainWindow):
             self.ui.statusBar.showMessage("Pos : (%s,%s)" % (x,y))
         self.ui.mapViewer.init(image, x_0, y_0, dx, dy, updateStatus)
         
-        
+        self.robots = robots
                 
         for cbox in [self.ui.killedRobotBox, self.ui.warnedKilledRobotBox, self.ui.vnetRobotBox, self.ui.targetRobotBox, self.ui.debugRobotBox]:
             for r in sorted(robots.keys()):
@@ -106,10 +106,15 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.debugStateBox.addItem("running")
         self.ui.debugStateBox.addItem("error")
 
+        self.ui.comCheckBox.stateChanged.connect(self.ui.mapViewer.set_draw_com)
         self.ui.transparencySlider.valueChanged.connect(self.ui.mapViewer.set_opacity)
         
         self.ui.startButton.clicked.connect(self.cb_start_mission)
         self.ui.logPosButton.clicked.connect(self.cb_log_poses)
+        self.ui.stopButton.clicked.connect(self.cb_stop_mission)
+        self.ui.ubComButton.clicked.connect(self.cb_ub_com)
+        self.ui.ubTargetButton.clicked.connect(self.cb_ub_target)
+        self.ui.paramLoadButton.clicked.connect(self.cb_load_params)
         
         self.ui.killButton.clicked.connect(self.cb_kill_robot)
         self.ui.vnetIsolateButton.clicked.connect(self.cb_vnet_isolate)
@@ -119,12 +124,73 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.debugStateSend.clicked.connect(self.cb_debug_state)
         self.ui.debugSendUpdateButton.clicked.connect(self.cb_debug_stn_update)
         self.ui.debugRepairButton.clicked.connect(self.cb_debug_repair)
+        self.ui.debugSendGeneralUpdateButton.clicked.connect(self.cb_debug_stn_update_general)
+        
+        def cb_vnet_stat(msg):
+            data = json.loads(msg.data)
+            
+            f = data["from"]
+            for to in data["forwarded"]:
+                if to != f:
+                    self.ui.mapViewer.add_com(f, to, color="green")
+            for to in data["filtered"]:
+                if to != f:
+                    self.ui.mapViewer.add_com(f, to, color="red")
+            self.ui.mapViewer.update()
+        
+        rospy.Subscriber("/vnet/statistics", String, cb_vnet_stat)
         
         self.show()
 
     def cb_start_mission(self):
         self.hidden_start_pub.publish(Empty())
         logger.info("Start mission")
+        
+    def cb_stop_mission(self):
+        logger.info("Stop mission")
+        for r in self.robots.keys():
+            self.send_alea(r, 'state', """{"state":"done"}""")
+
+    def cb_ub_com(self):
+        value = self.ui.ubComField.text()
+        try:
+            v = float(value)
+        except ValueError:
+            v = None
+        
+        if v is not None and v > 0:
+            logger.info("Setting the parameter /hidden/ubForCom to %s" % v)
+            rospy.set_param("/hidden/ubForCom", v)
+        else:
+            logger.info("Deleting the parameter /hidden/ubForCom")
+            if rospy.has_param("/hidden/ubForCom"):
+                rospy.delete_param("/hidden/ubForCom")
+        
+    def cb_ub_target(self):
+        value = self.ui.ubTargetField.text()
+        try:
+            v = float(value)
+        except ValueError:
+            v = None
+        
+        if v is not None and v > 0:
+            logger.info("Setting the parameter /hidden/ubForTrack to %s" % v)
+            rospy.set_param("/hidden/ubForTrack", v)
+        else:
+            logger.info("Deleting the parameter /hidden/ubForTrack")
+            if rospy.has_param("/hidden/ubForTrack"):
+                rospy.delete_param("/hidden/ubForTrack")
+
+    def cb_load_params(self):
+        if rospy.has_param("/hidden/ubForCom"):
+            self.ui.ubComField.setText(str(rospy.get_param("/hidden/ubForCom")))
+        else:
+            self.ui.ubComField.setText("")
+            
+        if rospy.has_param("/hidden/ubForTrack"):
+            self.ui.ubTargetField.setText(str(rospy.get_param("/hidden/ubForTrack")))
+        else:
+            self.ui.ubTargetField.setText("")
 
     def cb_log_poses(self):
         global bag, bag_record, mission_name
@@ -196,6 +262,11 @@ class MainWindow(QtGui.QMainWindow):
         robot = self.ui.debugRobotBox.currentText()
         logger.info('Robot {0} will send a MaSTN update'.format(robot))
         self.send_alea(robot, 'sendMastn', '{}')
+        
+    def cb_debug_stn_update_general(self):
+        for robot in self.robots:
+            logger.info('Robot {0} will send a MaSTN update'.format(robot))
+            self.send_alea(robot, 'sendMastn', '{}')
 
     def cb_debug_repair(self):
         robot = self.ui.debugRobotBox.currentText()

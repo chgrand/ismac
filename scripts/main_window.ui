@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>992</width>
-    <height>665</height>
+    <height>885</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
       <property name="minimumSize">
        <size>
         <width>300</width>
-        <height>500</height>
+        <height>650</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -61,10 +61,13 @@
           <item>
            <widget class="QCheckBox" name="comCheckBox">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
              <string>Communications</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
             <property name="tristate">
              <bool>false</bool>
@@ -121,7 +124,7 @@
           <item>
            <widget class="QPushButton" name="startButton">
             <property name="text">
-             <string>Start mission</string>
+             <string>Début mission</string>
             </property>
            </widget>
           </item>
@@ -138,10 +141,72 @@
           <item>
            <widget class="QPushButton" name="stopButton">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="text">
-             <string>Stop mission</string>
+             <string>Fin mission</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QLineEdit" name="ubComField">
+              <property name="maximumSize">
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ubComButton">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Attente max. com (s)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QLineEdit" name="ubTargetField">
+              <property name="maximumSize">
+               <size>
+                <width>40</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ubTargetButton">
+              <property name="text">
+               <string>Durée max. suivi cible (s)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="paramLoadButton">
+            <property name="text">
+             <string>Recharger paramètres</string>
             </property>
            </widget>
           </item>
@@ -168,7 +233,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>163</height>
+               <height>271</height>
               </rect>
              </property>
              <attribute name="label">
@@ -178,7 +243,7 @@
               <item row="0" column="0">
                <widget class="QLabel" name="label_2">
                 <property name="text">
-                 <string>Killed robot</string>
+                 <string>Robot tué</string>
                 </property>
                </widget>
               </item>
@@ -191,14 +256,14 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_3">
                 <property name="text">
-                 <string>Informed robot</string>
+                 <string>Robot informé</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="1">
                <widget class="QPushButton" name="killButton">
                 <property name="text">
-                 <string>Kill</string>
+                 <string>Tuer</string>
                 </property>
                </widget>
               </item>
@@ -223,11 +288,11 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>163</height>
+               <height>271</height>
               </rect>
              </property>
              <attribute name="label">
-              <string>vNet</string>
+              <string>Communications (vNet)</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
@@ -254,7 +319,7 @@
               <item>
                <widget class="QPushButton" name="vnetResetButton">
                 <property name="text">
-                 <string>Remise à zéro</string>
+                 <string>Tout autoriser</string>
                 </property>
                </widget>
               </item>
@@ -286,7 +351,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>163</height>
+               <height>271</height>
               </rect>
              </property>
              <attribute name="label">
@@ -372,7 +437,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>163</height>
+               <height>271</height>
               </rect>
              </property>
              <attribute name="label">
@@ -421,6 +486,17 @@ MàJ STN</string>
                  <widget class="QPushButton" name="debugRepairButton">
                   <property name="text">
                    <string>Réparation</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <item>
+                 <widget class="QPushButton" name="debugSendGeneralUpdateButton">
+                  <property name="text">
+                   <string>Envoyer MàJ STN générale</string>
                   </property>
                  </widget>
                 </item>
