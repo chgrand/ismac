@@ -8,7 +8,7 @@ class MapViewer(QtGui.QWidget):
     def __init__(self, parent):
         super(MapViewer, self).__init__(parent)
 
-    def init(self, a_map, x_0, y_0, x_size, y_size):
+    def init(self, a_map, x_0, y_0, x_size, y_size, cb_click=None):
         self.map_image = a_map
         # Relation between map pixel and meters
         self.map_mt_origin_x = x_0
@@ -29,6 +29,8 @@ class MapViewer(QtGui.QWidget):
         self.move_map = False
         
         self.opacity = 0.7
+        
+        self.cb_click = cb_click
     
     def set_opacity(self, value):
         v = float(value)/100  #Assume value in %
@@ -138,6 +140,8 @@ class MapViewer(QtGui.QWidget):
             y = int(y*100)/100.
             print("Goto point: "),
             print((x,y))
+            if self.cb_click is not None:
+                self.cb_click(x,y)
             
         if event.button()==2:
             self.move_map = False

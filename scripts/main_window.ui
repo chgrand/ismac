@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>992</width>
-    <height>760</height>
+    <height>665</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,14 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="MapViewer" name="mapViewer" native="true"/>
+     <widget class="MapViewer" name="mapViewer" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QFrame" name="frame">
@@ -29,7 +36,7 @@
       <property name="minimumSize">
        <size>
         <width>300</width>
-        <height>695</height>
+        <height>500</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -161,7 +168,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>258</height>
+               <height>163</height>
               </rect>
              </property>
              <attribute name="label">
@@ -216,7 +223,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>258</height>
+               <height>163</height>
               </rect>
              </property>
              <attribute name="label">
@@ -279,7 +286,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>258</height>
+               <height>163</height>
               </rect>
              </property>
              <attribute name="label">
@@ -365,7 +372,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>258</height>
+               <height>163</height>
               </rect>
              </property>
              <attribute name="label">
@@ -454,7 +461,7 @@ MàJ STN</string>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <customwidgets>
   <customwidget>

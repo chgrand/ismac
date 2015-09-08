@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Sep  8 10:05:34 2015
+# Created: Tue Sep  8 13:03:41 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,12 +12,17 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(992, 760)
+        MainWindow.resize(992, 665)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtGui.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.mapViewer = MapViewer(self.centralwidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.mapViewer.sizePolicy().hasHeightForWidth())
+        self.mapViewer.setSizePolicy(sizePolicy)
         self.mapViewer.setObjectName("mapViewer")
         self.horizontalLayout.addWidget(self.mapViewer)
         self.frame = QtGui.QFrame(self.centralwidget)
@@ -26,7 +31,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
-        self.frame.setMinimumSize(QtCore.QSize(300, 695))
+        self.frame.setMinimumSize(QtCore.QSize(300, 500))
         self.frame.setMaximumSize(QtCore.QSize(300, 16777215))
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
@@ -82,7 +87,7 @@ class Ui_MainWindow(object):
         self.toolBox = QtGui.QToolBox(self.groupBox_3)
         self.toolBox.setObjectName("toolBox")
         self.page = QtGui.QWidget()
-        self.page.setGeometry(QtCore.QRect(0, 0, 254, 258))
+        self.page.setGeometry(QtCore.QRect(0, 0, 254, 163))
         self.page.setObjectName("page")
         self.gridLayout = QtGui.QGridLayout(self.page)
         self.gridLayout.setObjectName("gridLayout")
@@ -105,7 +110,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addItem(spacerItem, 4, 0, 1, 1)
         self.toolBox.addItem(self.page, "")
         self.page_2 = QtGui.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 258))
+        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 163))
         self.page_2.setObjectName("page_2")
         self.verticalLayout_6 = QtGui.QVBoxLayout(self.page_2)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -132,7 +137,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addItem(spacerItem1)
         self.toolBox.addItem(self.page_2, "")
         self.page_3 = QtGui.QWidget()
-        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 258))
+        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 163))
         self.page_3.setObjectName("page_3")
         self.verticalLayout_7 = QtGui.QVBoxLayout(self.page_3)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -166,7 +171,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addItem(spacerItem2)
         self.toolBox.addItem(self.page_3, "")
         self.page_4 = QtGui.QWidget()
-        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 258))
+        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 163))
         self.page_4.setObjectName("page_4")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.page_4)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -208,9 +213,9 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 992, 25))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QtGui.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.statusBar = QtGui.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
         self.toolBox.setCurrentIndex(0)
