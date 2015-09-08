@@ -59,20 +59,34 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="QCheckBox" name="comCheckBox">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Communications</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QCheckBox" name="comCheckBox">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Communications</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <property name="tristate">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="trailCheckBox">
+              <property name="text">
+               <string>Traces</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QLabel" name="label">
@@ -233,7 +247,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>271</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">
@@ -288,7 +302,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>271</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">
@@ -351,7 +365,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>271</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">
@@ -437,7 +451,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>271</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">

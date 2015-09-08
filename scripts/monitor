@@ -107,6 +107,7 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.debugStateBox.addItem("error")
 
         self.ui.comCheckBox.stateChanged.connect(self.ui.mapViewer.set_draw_com)
+        self.ui.trailCheckBox.stateChanged.connect(self.ui.mapViewer.set_draw_trail)
         self.ui.transparencySlider.valueChanged.connect(self.ui.mapViewer.set_opacity)
         
         self.ui.startButton.clicked.connect(self.cb_start_mission)

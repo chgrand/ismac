@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Sep  8 16:40:44 2015
+# Created: Tue Sep  8 17:36:42 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -42,12 +42,19 @@ class Ui_MainWindow(object):
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout_4 = QtGui.QVBoxLayout(self.groupBox)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.horizontalLayout_11 = QtGui.QHBoxLayout()
+        self.horizontalLayout_11.setObjectName("horizontalLayout_11")
         self.comCheckBox = QtGui.QCheckBox(self.groupBox)
         self.comCheckBox.setEnabled(True)
         self.comCheckBox.setChecked(True)
         self.comCheckBox.setTristate(False)
         self.comCheckBox.setObjectName("comCheckBox")
-        self.verticalLayout_4.addWidget(self.comCheckBox)
+        self.horizontalLayout_11.addWidget(self.comCheckBox)
+        self.trailCheckBox = QtGui.QCheckBox(self.groupBox)
+        self.trailCheckBox.setChecked(True)
+        self.trailCheckBox.setObjectName("trailCheckBox")
+        self.horizontalLayout_11.addWidget(self.trailCheckBox)
+        self.verticalLayout_4.addLayout(self.horizontalLayout_11)
         self.label = QtGui.QLabel(self.groupBox)
         self.label.setEnabled(True)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
@@ -121,7 +128,7 @@ class Ui_MainWindow(object):
         self.toolBox = QtGui.QToolBox(self.groupBox_3)
         self.toolBox.setObjectName("toolBox")
         self.page = QtGui.QWidget()
-        self.page.setGeometry(QtCore.QRect(0, 0, 254, 271))
+        self.page.setGeometry(QtCore.QRect(0, 0, 254, 269))
         self.page.setObjectName("page")
         self.gridLayout = QtGui.QGridLayout(self.page)
         self.gridLayout.setObjectName("gridLayout")
@@ -144,7 +151,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addItem(spacerItem, 4, 0, 1, 1)
         self.toolBox.addItem(self.page, "")
         self.page_2 = QtGui.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 271))
+        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 269))
         self.page_2.setObjectName("page_2")
         self.verticalLayout_6 = QtGui.QVBoxLayout(self.page_2)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -171,7 +178,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addItem(spacerItem1)
         self.toolBox.addItem(self.page_2, "")
         self.page_3 = QtGui.QWidget()
-        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 271))
+        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 269))
         self.page_3.setObjectName("page_3")
         self.verticalLayout_7 = QtGui.QVBoxLayout(self.page_3)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -205,7 +212,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addItem(spacerItem2)
         self.toolBox.addItem(self.page_3, "")
         self.page_4 = QtGui.QWidget()
-        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 271))
+        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 269))
         self.page_4.setObjectName("page_4")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.page_4)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -265,6 +272,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "ISMAC", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Affichage", None, QtGui.QApplication.UnicodeUTF8))
         self.comCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Communications", None, QtGui.QApplication.UnicodeUTF8))
+        self.trailCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Traces", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Transparence", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("MainWindow", "Opérateur Mission", None, QtGui.QApplication.UnicodeUTF8))
         self.startButton.setText(QtGui.QApplication.translate("MainWindow", "Début mission", None, QtGui.QApplication.UnicodeUTF8))

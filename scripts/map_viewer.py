@@ -1,7 +1,22 @@
 #!/usr/bin/env python
 
+from copy import copy
 import time
 from PySide import QtGui, QtCore
+
+
+##########
+
+#Graphical parameters
+
+comMaxOpacity = 0.5
+comTrailLength = 5. # in sec
+
+
+posTrailMaxOpacity = 0.5
+posTrailLength = 60 #in sec
+posTrailStep = 5 #in sec
+##########
 
 class MapViewer(QtGui.QWidget):
 
@@ -33,7 +48,9 @@ class MapViewer(QtGui.QWidget):
         self.cb_click = cb_click #Callback for displaying x,y when clicked
         
         self.draw_coms = True
-        self.coms = []
+        self.draw_trails = True
+        self.coms = [] # List of dict
+        self.past_pos = {} #Each key is a robot, each value a list of dict
     
     def set_opacity(self, value):
         v = float(value)/100  #Assume value in %
@@ -49,6 +66,13 @@ class MapViewer(QtGui.QWidget):
         else:
             print("Stop drawing the coms")
         self.draw_coms = b
+        
+    def set_draw_trail(self, b):
+        if b:
+            print("Drawing the trails")
+        else:
+            print("Stop drawing the trails")
+        self.draw_trails = b
         
     def add_com(self, robotFrom, robotTo, color="green"):
         self.coms.append({"from":robotFrom, "to":robotTo, "time":time.time(), "color":color})
@@ -69,14 +93,30 @@ class MapViewer(QtGui.QWidget):
         painter.restore()    
 
         pos = {}
+        current_time = time.time()
 
         for agent in self.agents_list:
+            agent_name = agent.get_name()
             (x, y) = self.viewport_from_map_mt( *agent.get_pos() )
             color = QtGui.QColor(agent.getColor())
             pen = QtGui.QPen(color, 3, QtCore.Qt.SolidLine)            
             painter.setPen(pen)
             self.plotMark(painter, x, y)
             painter.save()
+            painter.save()
+            
+            # Draw the trail
+            if self.draw_trails and agent_name in self.past_pos:
+                l = copy(self.past_pos[agent_name])
+                l.append({"time":current_time, "pos":agent.get_pos()})
+                for d1,d2 in zip(l,l[1:]):
+                    opacity = posTrailMaxOpacity * (1 - (current_time - d1["time"])/posTrailLength)
+                    painter.setOpacity(opacity)
+                    (x1_past, y1_past) = self.viewport_from_map_mt( *d1["pos"] )
+                    (x2_past, y2_past) = self.viewport_from_map_mt( *d2["pos"] )
+                    painter.drawLine(x1_past, y1_past, x2_past, y2_past)
+
+            painter.restore()
 
             # draw text in bounding box
             painter.setFont(QtGui.QFont('Monospace', 12))
@@ -94,18 +134,28 @@ class MapViewer(QtGui.QWidget):
             painter.restore()
             
             pos[agent.get_name()] = (x,y)
+            
+            
+            if agent_name not in self.past_pos:
+                self.past_pos[agent_name] = []
+            # Keep it only it if is posTrailStep seconds after the last position
+            if not self.past_pos[agent_name] or current_time > self.past_pos[agent_name][-1]["time"] + posTrailStep:
+                if agent.get_pos()[0] != 0 or agent.get_pos()[1] != 0:
+                    self.past_pos[agent_name].append({"time":current_time, "pos":agent.get_pos()})
+            # Remove the obsolete past positions
+            self.past_pos[agent_name] = [d for d in self.past_pos[agent_name] if current_time < d["time"] + posTrailLength]
+            
         
         if self.draw_coms:
-            #print("Drawing %s links" % len(self.coms))
             for d in self.coms:
                 r1,r2 = d["from"],d["to"]
                 color = QtGui.QColor(QtGui.QColor(d["color"]))
                 pen = QtGui.QPen(color, 3, QtCore.Qt.SolidLine)            
                 painter.setPen(pen)
-                painter.setOpacity(.5 * (1 - (time.time() - d["time"])/5))
+                painter.setOpacity(comMaxOpacity * (1 - (current_time - d["time"])/comTrailLength))
                 painter.drawLine(pos[r1][0], pos[r1][1], pos[r2][0], pos[r2][1])
                 
-            self.coms = [d for d in self.coms if time.time() < d["time"] + 5]
+            self.coms = [d for d in self.coms if current_time < d["time"] + comTrailLength]
         
         painter.end()
 
