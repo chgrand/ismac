@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 
+from Ui_MainWindow import Ui_MainWindow
+
 import rospy
 import rosbag
-from std_msgs.msg import Empty
+from std_msgs.msg import Empty,String
 from geometry_msgs.msg import PoseStamped
 from metal.srv import AleaAction
 import os, sys
 import json
 from PySide import QtGui
+from PySide.QtCore import QTimer
 from map_viewer import MapViewer
 import time
 import logging
+import signal
 
 ## Global properties
 
@@ -59,20 +63,52 @@ class Agent:
     def getColor(self):
         return self.color
 
-
 #------------------------------------------------------------------------------
-class MainWin(QtGui.QWidget):
+class MainWindow(QtGui.QMainWindow):
 
-    def __init__(self, map_viewer_):
-        super(MainWin, self).__init__()
-        self.hidden_start_pub = rospy.Publisher('/hidden/start', Empty, 
-                                                queue_size = 1)
-        self.create_ui(map_viewer_)
+    def __init__(self, image, x_0, y_0, dx, dy, robots, targets):
+        super(MainWindow, self).__init__()
+        self.ui=Ui_MainWindow()
+        self.hidden_start_pub = rospy.Publisher('/hidden/start', Empty, queue_size = 1)
+        self.vnet_add = rospy.Publisher('/vnet/add', String, queue_size = 1)
+        self.vnet_del = rospy.Publisher('/vnet/del', String, queue_size = 1)
+        self.ui.setupUi(self)
+        self.ui.mapViewer.init(image, x_0, y_0, dx, dy)
+                
+        for cbox in [self.ui.killedRobotBox, self.ui.warnedKilledRobotBox, self.ui.vnetRobotBox, self.ui.targetRobotBox, self.ui.debugRobotBox]:
+            for r in robots.keys():
+                cbox.addItem(r)
+                
+        for agent,props in robots.items():
+            print('Add robot: '+agent+"\t"+props['color'])
+            self.ui.mapViewer.add_agent(Agent(agent, props['color']))
+        for agent,props in targets.items():
+            print('Add target: '+agent+"\t"+props['color'])
+            self.ui.mapViewer.add_agent(Agent(agent, props['color']))
+   
+        self.ui.debugStateBox.addItem("running")
+        self.ui.debugStateBox.addItem("error")
+
+        self.ui.transparencySlider.valueChanged.connect(self.ui.mapViewer.set_opacity)
         
+        self.ui.startButton.clicked.connect(self.cb_start_mission)
+        self.ui.logPosButton.clicked.connect(self.cb_log_poses)
+        
+        self.ui.killButton.clicked.connect(self.cb_kill_robot)
+        self.ui.vnetIsolateButton.clicked.connect(self.cb_vnet_isolate)
+        self.ui.vnetBlockButton.clicked.connect(self.cb_vnet_isolate_all)
+        self.ui.vnetResetButton.clicked.connect(self.cb_vnet_reset)
+        self.ui.targetSendButton.clicked.connect(self.cb_target_send)
+        self.ui.debugStateSend.clicked.connect(self.cb_debug_state)
+        self.ui.debugSendUpdateButton.clicked.connect(self.cb_debug_stn_update)
+        self.ui.debugRepairButton.clicked.connect(self.cb_debug_repair)
+        
+        self.show()
+
     def cb_start_mission(self):
         self.hidden_start_pub.publish(Empty())
         logger.info("Start mission")
-        
+
     def cb_log_poses(self):
         global bag, bag_record, mission_name
         if self.sender().isChecked():
@@ -98,92 +134,59 @@ class MainWin(QtGui.QWidget):
             logger.info('[%s] alea service ACK ' % agent)
         else:
             logger.warning('[%s] alea service NOT ACK ' % agent)
-        
 
     def cb_kill_robot(self):
-        killed_agent = self.comboBoxKilled.currentText()
-        informed_agent = self.comboBoxInformed.currentText()
+        killed_agent = self.ui.killedRobotBox.currentText()
+        informed_agent = self.ui.warnedKilledRobotBox.currentText()
         logger.info('Kill {0} and inform {1}'.format(killed_agent, informed_agent))
         self.send_alea(killed_agent, 'robotDead', '{"robot":"'+killed_agent+'"}')
         self.send_alea(informed_agent, 'robotDead', '{"robot":"'+killed_agent+'"}')
 
-    def cb_STN_update(self):
-        agent = self.comboBoxAgent.currentText()
-        self.send_alea(agent, 'sendMastn', '{}')
+    def cb_vnet_isolate(self):
+        robot = self.ui.vnetRobotBox.currentText()
+        logger.info('Isolating {0}'.format(robot))
+        self.vnet_add.publish("""{"src":"%s", "tgt":"*", "filter":"block", "bidir":true}"""%(robot))
+        self.ui.vnetInfoLabel.setText(self.ui.vnetInfoLabel.text() + "\nIsolate %s" % robot)
 
-    def cb_force_repair(self):
-        agent = self.comboBoxAgent.currentText()
-        self.send_alea(agent, 'repair', '{}')
+    def cb_vnet_isolate_all(self):
+        logger.info("Cutting all communications")
+        self.vnet_add.publish("""{"src":"*", "tgt":"*", "filter":"block", "bidir":true}""")
+        self.ui.vnetInfoLabel.setText("Everything blocked")
         
-
-    def add_agent(self, name):
-        self.comboBoxKilled.addItem(name)
-        self.comboBoxInformed.addItem(name)
-        self.comboBoxAgent.addItem(name)
+    def cb_vnet_reset(self):
+        logger.info("Allowing all communications")
+        self.vnet_del.publish("""{"src":"*", "tgt":"*", "filter":"block", "bidir":true}""")
+        self.ui.vnetInfoLabel.setText("")
         
-    def create_ui(self, map_viewer_):
-        vbox = QtGui.QVBoxLayout()
-        btn = QtGui.QPushButton("Start mission")
-        btn.setMinimumHeight(32)
-        btn.clicked.connect(self.cb_start_mission)
-        vbox.addWidget(btn)
+    def cb_target_send(self):
+        robot = self.ui.targetRobotBox.currentText()
+        x = self.ui.targetXField.text()
+        if not x:
+            x = "236"
+        y = self.ui.targetYField.text()
+        if not y:
+            y = "-9"
+        logger.info('Robot {0} will see the target at ({1},{2})'.format(robot,x,y))
+        self.send_alea(robot, 'targetFound', """{"position":{"x":%f,"y":%f}""" % (float(x),float(y)))
+    
+    def cb_debug_state(self):
+        robot = self.ui.debugRobotBox.currentText()
+        state = self.ui.debugStateBox.currentText()
+        logger.info('Robot {0} will got to state {1}'.format(robot,state))
+        self.send_alea(robot, 'state', """{"state":"%s"}""" % state)
+    
+    def cb_debug_stn_update(self):
+        robot = self.ui.debugRobotBox.currentText()
+        logger.info('Robot {0} will send a MaSTN update'.format(robot))
+        self.send_alea(robot, 'sendMastn', '{}')
+
+    def cb_debug_repair(self):
+        robot = self.ui.debugRobotBox.currentText()
+        logger.info('Robot {0} will repair'.format(robot))
+        self.send_alea(robot, 'repair', '{}')
         
-        btn = QtGui.QPushButton("Log poses OFF")
-        btn.setMinimumHeight(32)
-        btn.setCheckable(True)
-        btn.toggled.connect(self.cb_log_poses)
-        vbox.addWidget(btn)
-        vbox.addSpacing(32)
-
-        vbox.addWidget(QtGui.QLabel('Killed robot:'))
-        self.comboBoxKilled = QtGui.QComboBox()
-        vbox.addWidget(self.comboBoxKilled)
-        vbox.addWidget(QtGui.QLabel('Informed robot:'))
-        self.comboBoxInformed = QtGui.QComboBox()
-        vbox.addWidget(self.comboBoxInformed)                
-        
-        btn = QtGui.QPushButton("Kill !!!")
-        btn.setMinimumHeight(32)
-        btn.clicked.connect(self.cb_kill_robot)
-        vbox.addWidget(btn)
-        vbox.addSpacing(32)
-
-        vbox.addWidget(QtGui.QLabel('Action on agent:'))
-        self.comboBoxAgent = QtGui.QComboBox()
-        vbox.addWidget(self.comboBoxAgent)                
-        
-        btn = QtGui.QPushButton("STN update")
-        btn.clicked.connect(self.cb_STN_update)
-        vbox.addWidget(btn)
-
-        btn = QtGui.QPushButton("Force repair")
-        btn.clicked.connect(self.cb_force_repair)
-        vbox.addWidget(btn)
-
-        #btn = QtGui.QPushButton("Target found")
-        #btn.clicked.connect(self.cb_kill_robot)
-        #vbox.addWidget(btn)
-
-        vbox.addStretch(1)
-        
-        group = QtGui.QGroupBox()
-        group.setFixedWidth(180)
-        group.setLayout(vbox)
-
-
-        
-        hbox = QtGui.QHBoxLayout()
-        hbox.addWidget(map_viewer_)
-        hbox.addWidget(group)
-
-        self.setLayout(hbox)
-        self.setGeometry(500, 400, 900, 600) #int(y_size*500/x_size))
-        self.setWindowTitle('ISMAC')
-        self.show()
-
-
-#------------------------------------------------------------------------------
 def main():
+
     global mission_name, bag_dir
     
     if len(sys.argv) < 2:
@@ -221,39 +224,27 @@ def main():
         print("Error image not found")
         sys.exit()
 
-
-        
-
-        
-    # Start application and widgets
+    robots = mission['agents']
+    targets = mission.get('targets', {})
+    
     app = QtGui.QApplication(sys.argv)
-    map_viewer = MapViewer(image, x_0, y_0, dx, dy)
-    main_window = MainWin(map_viewer)
-
+    w = MainWindow(image, x_0, y_0, dx, dy, robots, targets)
     
     # Start ros node
     rospy.init_node('ISMAC')#, anonymous=True)
+    
+    # Let the python interpreter run each 500 ms.
+    timer = QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)  
 
-    ## Analyse and add list of agents
-    agents_list = mission['agents']
-    for agent, props in agents_list.iteritems():        
-        print('Add agent: '+agent+"\t"+props['color'])
-        map_viewer.add_agent(Agent(agent, props['color']))
-        #map_viewer.add_agent(Agent(agent, agents_list[agent]['color']))
-        main_window.add_agent(agent)
+    #Exit when a SIGINT is received
+    def sigint_handler(*args):
+        QtGui.QApplication.quit()
+    signal.signal(signal.SIGINT, sigint_handler)
+        
+    sys.exit(app.exec_())
 
-    ## Analyse and add list of targets as agents in map_viewer only
-    if 'targets' in mission:
-        for target, props in mission['targets'].iteritems():
-            print('Add target: '+target+"\t"+props['color'])
-            map_viewer.add_agent(Agent(target, props['color']))
-
-
-    app.exec_()
     
 if __name__ == '__main__':
-    try:
-        main()
-    except rospy.ROSInterruptException:
-        pass
-
+    main()

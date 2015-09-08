@@ -5,9 +5,10 @@ from PySide import QtGui, QtCore
 
 class MapViewer(QtGui.QWidget):
 
-    def __init__(self, a_map, x_0, y_0, x_size, y_size):
-        super(MapViewer, self).__init__()
+    def __init__(self, parent):
+        super(MapViewer, self).__init__(parent)
 
+    def init(self, a_map, x_0, y_0, x_size, y_size):
         self.map_image = a_map
         # Relation between map pixel and meters
         self.map_mt_origin_x = x_0
@@ -26,6 +27,16 @@ class MapViewer(QtGui.QWidget):
 
         # IHM action
         self.move_map = False
+        
+        self.opacity = 0.7
+    
+    def set_opacity(self, value):
+        v = float(value)/100  #Assume value in %
+        if v <= 1 and v >=0:
+            self.opacity = v
+            self.update()
+        else:
+            print("%s is not a valid opacity" % value)
                 
     def add_agent(self, agent):
         self.agents_list.append(agent)
@@ -36,7 +47,7 @@ class MapViewer(QtGui.QWidget):
         painter.begin(self)
         painter.save()
         scale_ = self.viewport_factor*self.zoom_factor
-        painter.setOpacity(.7)
+        painter.setOpacity(self.opacity)
         painter.scale(scale_, scale_)
         painter.translate(-self.viewport_origin_x, -self.viewport_origin_y)
         painter.drawImage(0, 0, self.map_image)
