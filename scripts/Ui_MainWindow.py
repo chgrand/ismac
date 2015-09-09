@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Tue Sep  8 17:36:42 2015
+# Created: Wed Sep  9 13:53:50 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -79,6 +79,7 @@ class Ui_MainWindow(object):
         self.startButton.setObjectName("startButton")
         self.verticalLayout_2.addWidget(self.startButton)
         self.logPosButton = QtGui.QPushButton(self.groupBox_2)
+        self.logPosButton.setEnabled(False)
         self.logPosButton.setCheckable(True)
         self.logPosButton.setObjectName("logPosButton")
         self.verticalLayout_2.addWidget(self.logPosButton)
@@ -164,6 +165,16 @@ class Ui_MainWindow(object):
         self.vnetIsolateButton.setObjectName("vnetIsolateButton")
         self.horizontalLayout_2.addWidget(self.vnetIsolateButton)
         self.verticalLayout_6.addLayout(self.horizontalLayout_2)
+        self.horizontalLayout_12 = QtGui.QHBoxLayout()
+        self.horizontalLayout_12.setObjectName("horizontalLayout_12")
+        self.vnetRangeField = QtGui.QLineEdit(self.page_2)
+        self.vnetRangeField.setMaximumSize(QtCore.QSize(40, 16777215))
+        self.vnetRangeField.setObjectName("vnetRangeField")
+        self.horizontalLayout_12.addWidget(self.vnetRangeField)
+        self.vnetRangeButton = QtGui.QPushButton(self.page_2)
+        self.vnetRangeButton.setObjectName("vnetRangeButton")
+        self.horizontalLayout_12.addWidget(self.vnetRangeButton)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_12)
         self.vnetBlockButton = QtGui.QPushButton(self.page_2)
         self.vnetBlockButton.setObjectName("vnetBlockButton")
         self.verticalLayout_6.addWidget(self.vnetBlockButton)
@@ -178,7 +189,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addItem(spacerItem1)
         self.toolBox.addItem(self.page_2, "")
         self.page_3 = QtGui.QWidget()
-        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 269))
+        self.page_3.setGeometry(QtCore.QRect(0, 0, 198, 121))
         self.page_3.setObjectName("page_3")
         self.verticalLayout_7 = QtGui.QVBoxLayout(self.page_3)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -212,7 +223,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addItem(spacerItem2)
         self.toolBox.addItem(self.page_3, "")
         self.page_4 = QtGui.QWidget()
-        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 269))
+        self.page_4.setGeometry(QtCore.QRect(0, 0, 217, 175))
         self.page_4.setObjectName("page_4")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.page_4)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -287,6 +298,8 @@ class Ui_MainWindow(object):
         self.killButton.setText(QtGui.QApplication.translate("MainWindow", "Tuer", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page), QtGui.QApplication.translate("MainWindow", "Robot Mort", None, QtGui.QApplication.UnicodeUTF8))
         self.vnetIsolateButton.setText(QtGui.QApplication.translate("MainWindow", "Isoler", None, QtGui.QApplication.UnicodeUTF8))
+        self.vnetRangeField.setPlaceholderText(QtGui.QApplication.translate("MainWindow", "m", None, QtGui.QApplication.UnicodeUTF8))
+        self.vnetRangeButton.setText(QtGui.QApplication.translate("MainWindow", "Limiter portée com.", None, QtGui.QApplication.UnicodeUTF8))
         self.vnetBlockButton.setText(QtGui.QApplication.translate("MainWindow", "Tout bloquer", None, QtGui.QApplication.UnicodeUTF8))
         self.vnetResetButton.setText(QtGui.QApplication.translate("MainWindow", "Tout autoriser", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page_2), QtGui.QApplication.translate("MainWindow", "Communications (vNet)", None, QtGui.QApplication.UnicodeUTF8))

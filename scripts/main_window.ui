@@ -144,6 +144,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="logPosButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Log Pose OFF</string>
             </property>
@@ -324,6 +327,30 @@
                </layout>
               </item>
               <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_12">
+                <item>
+                 <widget class="QLineEdit" name="vnetRangeField">
+                  <property name="maximumSize">
+                   <size>
+                    <width>40</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="placeholderText">
+                   <string>m</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="vnetRangeButton">
+                  <property name="text">
+                   <string>Limiter portée com.</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
                <widget class="QPushButton" name="vnetBlockButton">
                 <property name="text">
                  <string>Tout bloquer</string>
@@ -364,8 +391,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>254</width>
-               <height>269</height>
+               <width>198</width>
+               <height>121</height>
               </rect>
              </property>
              <attribute name="label">
@@ -450,8 +477,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>254</width>
-               <height>269</height>
+               <width>217</width>
+               <height>175</height>
               </rect>
              </property>
              <attribute name="label">

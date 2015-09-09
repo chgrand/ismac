@@ -53,8 +53,6 @@ class Agent:
                     bag.write('/'+self.name+'/pose', data)
                 except Exception as e:
                     import traceback
-                    exc_type, exc_value, exc_traceback = sys.exc_info()
-                    
                     print(self.name)
                     print(data)
                     print(traceback.format_exc())
@@ -119,6 +117,7 @@ class MainWindow(QtGui.QMainWindow):
         
         self.ui.killButton.clicked.connect(self.cb_kill_robot)
         self.ui.vnetIsolateButton.clicked.connect(self.cb_vnet_isolate)
+        self.ui.vnetRangeButton.clicked.connect(self.cb_vnet_range)
         self.ui.vnetBlockButton.clicked.connect(self.cb_vnet_isolate_all)
         self.ui.vnetResetButton.clicked.connect(self.cb_vnet_reset)
         self.ui.targetSendButton.clicked.connect(self.cb_target_send)
@@ -232,6 +231,16 @@ class MainWindow(QtGui.QMainWindow):
         self.vnet_add.publish("""{"src":"%s", "tgt":"*", "filter":"block", "bidir":true}"""%(robot))
         self.ui.vnetInfoLabel.setText(self.ui.vnetInfoLabel.text() + "\nIsolate %s" % robot)
 
+    def cb_vnet_range(self):
+        try:
+            r = float(self.ui.vnetRangeField.text())
+        except ValueError:
+            logger.error("Cannot convert %s to float" % self.ui.vnetRangeField.text())
+            return
+        logger.info('Com range limited to {}m'.format(r))
+        self.vnet_add.publish("""{"src":"*", "tgt":"*", "filter":"pose", "bidir":true, "range":%f}"""%(r))
+        self.ui.vnetInfoLabel.setText(self.ui.vnetInfoLabel.text() + "\nRange : %s" % r)
+        
     def cb_vnet_isolate_all(self):
         logger.info("Cutting all communications")
         self.vnet_add.publish("""{"src":"*", "tgt":"*", "filter":"block", "bidir":true}""")
@@ -239,7 +248,7 @@ class MainWindow(QtGui.QMainWindow):
         
     def cb_vnet_reset(self):
         logger.info("Allowing all communications")
-        self.vnet_del.publish("""{"src":"*", "tgt":"*", "filter":"block", "bidir":true}""")
+        self.vnet_del.publish("""{"src":"*", "tgt":"*", "index":"*"}""")
         self.ui.vnetInfoLabel.setText("")
         
     def cb_target_send(self):
@@ -320,7 +329,7 @@ def main():
     w = MainWindow(image, x_0, y_0, dx, dy, robots, targets)
     
     # Start ros node
-    rospy.init_node('ISMAC')#, anonymous=True)
+    rospy.init_node('ISMAC', anonymous=True)
     
     # Let the python interpreter run each 500 ms.
     timer = QTimer()
