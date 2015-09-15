@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Wed Sep  9 13:53:50 2015
+# Created: Tue Sep 15 16:05:08 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -75,14 +75,13 @@ class Ui_MainWindow(object):
         self.groupBox_2.setObjectName("groupBox_2")
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.groupBox_2)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.vnetReloadButton = QtGui.QPushButton(self.groupBox_2)
+        self.vnetReloadButton.setObjectName("vnetReloadButton")
+        self.verticalLayout_2.addWidget(self.vnetReloadButton)
         self.startButton = QtGui.QPushButton(self.groupBox_2)
+        self.startButton.setEnabled(False)
         self.startButton.setObjectName("startButton")
         self.verticalLayout_2.addWidget(self.startButton)
-        self.logPosButton = QtGui.QPushButton(self.groupBox_2)
-        self.logPosButton.setEnabled(False)
-        self.logPosButton.setCheckable(True)
-        self.logPosButton.setObjectName("logPosButton")
-        self.verticalLayout_2.addWidget(self.logPosButton)
         self.stopButton = QtGui.QPushButton(self.groupBox_2)
         self.stopButton.setEnabled(True)
         self.stopButton.setObjectName("stopButton")
@@ -152,7 +151,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addItem(spacerItem, 4, 0, 1, 1)
         self.toolBox.addItem(self.page, "")
         self.page_2 = QtGui.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 269))
+        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 236))
         self.page_2.setObjectName("page_2")
         self.verticalLayout_6 = QtGui.QVBoxLayout(self.page_2)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -189,7 +188,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addItem(spacerItem1)
         self.toolBox.addItem(self.page_2, "")
         self.page_3 = QtGui.QWidget()
-        self.page_3.setGeometry(QtCore.QRect(0, 0, 198, 121))
+        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 236))
         self.page_3.setObjectName("page_3")
         self.verticalLayout_7 = QtGui.QVBoxLayout(self.page_3)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -223,7 +222,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addItem(spacerItem2)
         self.toolBox.addItem(self.page_3, "")
         self.page_4 = QtGui.QWidget()
-        self.page_4.setGeometry(QtCore.QRect(0, 0, 217, 175))
+        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 236))
         self.page_4.setObjectName("page_4")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.page_4)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -286,8 +285,8 @@ class Ui_MainWindow(object):
         self.trailCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Traces", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Transparence", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("MainWindow", "Opérateur Mission", None, QtGui.QApplication.UnicodeUTF8))
+        self.vnetReloadButton.setText(QtGui.QApplication.translate("MainWindow", "MàJ vNet", None, QtGui.QApplication.UnicodeUTF8))
         self.startButton.setText(QtGui.QApplication.translate("MainWindow", "Début mission", None, QtGui.QApplication.UnicodeUTF8))
-        self.logPosButton.setText(QtGui.QApplication.translate("MainWindow", "Log Pose OFF", None, QtGui.QApplication.UnicodeUTF8))
         self.stopButton.setText(QtGui.QApplication.translate("MainWindow", "Fin mission", None, QtGui.QApplication.UnicodeUTF8))
         self.ubComButton.setText(QtGui.QApplication.translate("MainWindow", "Attente max. com (s)", None, QtGui.QApplication.UnicodeUTF8))
         self.ubTargetButton.setText(QtGui.QApplication.translate("MainWindow", "Durée max. suivi cible (s)", None, QtGui.QApplication.UnicodeUTF8))

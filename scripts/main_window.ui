@@ -136,22 +136,19 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QPushButton" name="startButton">
+           <widget class="QPushButton" name="vnetReloadButton">
             <property name="text">
-             <string>Début mission</string>
+             <string>MàJ vNet</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="logPosButton">
+           <widget class="QPushButton" name="startButton">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Log Pose OFF</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
+             <string>Début mission</string>
             </property>
            </widget>
           </item>
@@ -305,7 +302,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>269</height>
+               <height>236</height>
               </rect>
              </property>
              <attribute name="label">
@@ -391,8 +388,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>198</width>
-               <height>121</height>
+               <width>254</width>
+               <height>236</height>
               </rect>
              </property>
              <attribute name="label">
@@ -477,8 +474,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>217</width>
-               <height>175</height>
+               <width>254</width>
+               <height>236</height>
               </rect>
              </property>
              <attribute name="label">

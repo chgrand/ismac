@@ -15,6 +15,7 @@ from map_viewer import MapViewer
 import time
 import logging
 import signal
+import threading
 
 ## Global properties
 
@@ -37,13 +38,12 @@ class Agent:
         self.y = 0
         self.color = color    
         rospy.Subscriber("/"+name+"/pose", PoseStamped, self.callback)
-        
-        import threading
+
         self.lock = threading.RLock()
 
     def set_gui(self, gui):
         self.gui = gui
-            
+
     def callback(self, data):
         global bag_record, bag
         
@@ -58,10 +58,10 @@ class Agent:
                     print(traceback.format_exc())
         self.x = data.pose.position.x
         self.y = data.pose.position.y
-        try:
-            self.gui.update()    
-        except:
-            None
+        #try:
+        #    self.gui.update()
+        #except:
+        #    None
         
     
     def get_pos(self):
@@ -108,8 +108,8 @@ class MainWindow(QtGui.QMainWindow):
         self.ui.trailCheckBox.stateChanged.connect(self.ui.mapViewer.set_draw_trail)
         self.ui.transparencySlider.valueChanged.connect(self.ui.mapViewer.set_opacity)
         
+        self.ui.vnetReloadButton.clicked.connect(self.cb_reload_vnet)
         self.ui.startButton.clicked.connect(self.cb_start_mission)
-        self.ui.logPosButton.clicked.connect(self.cb_log_poses)
         self.ui.stopButton.clicked.connect(self.cb_stop_mission)
         self.ui.ubComButton.clicked.connect(self.cb_ub_com)
         self.ui.ubTargetButton.clicked.connect(self.cb_ub_target)
@@ -142,9 +142,16 @@ class MainWindow(QtGui.QMainWindow):
         
         self.show()
 
+    def cb_reload_vnet(self):
+        logger.info("Reloading config of vNet")
+        self.ui.startButton.setEnabled(True)
+        pub = rospy.Publisher("/vnet/reload", Empty, queue_size=1)
+        pub.publish()
+        
     def cb_start_mission(self):
-        self.hidden_start_pub.publish(Empty())
         logger.info("Start mission")
+        self.hidden_start_pub.publish(Empty())
+        self.ui.vnetReloadButton.setEnabled(False)
         
     def cb_stop_mission(self):
         logger.info("Stop mission")
@@ -192,6 +199,7 @@ class MainWindow(QtGui.QMainWindow):
         else:
             self.ui.ubTargetField.setText("")
 
+    """
     def cb_log_poses(self):
         global bag, bag_record, mission_name
         if self.sender().isChecked():
@@ -207,6 +215,7 @@ class MainWindow(QtGui.QMainWindow):
             bag_record = False
             bag.close()
             logger.info("Stop pose Log")
+    """
 
     def send_alea(self, agent, alea, parameter):
         # rosservice to send alea to agent
@@ -260,7 +269,7 @@ class MainWindow(QtGui.QMainWindow):
         if not y:
             y = "-9"
         logger.info('Robot {0} will see the target at ({1},{2})'.format(robot,x,y))
-        self.send_alea(robot, 'targetFound', """{"position":{"x":%f,"y":%f}}""" % (float(x),float(y)))
+        self.send_alea(robot, 'targetFound', """{"target":{"x":%f,"y":%f}}""" % (float(x),float(y)))
     
     def cb_debug_state(self):
         robot = self.ui.debugRobotBox.currentText()

@@ -3,6 +3,7 @@
 from copy import copy
 import time
 from PySide import QtGui, QtCore
+import threading
 
 
 ##########
@@ -51,7 +52,13 @@ class MapViewer(QtGui.QWidget):
         self.draw_trails = True
         self.coms = [] # List of dict
         self.past_pos = {} #Each key is a robot, each value a list of dict
-    
+
+        self.periodicUpdate()
+
+    def periodicUpdate(self):
+        self.update()
+        threading.Timer(0.1, self.periodicUpdate).start() #re-run it in 0.1 second
+
     def set_opacity(self, value):
         v = float(value)/100  #Assume value in %
         if v <= 1 and v >=0:
