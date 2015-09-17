@@ -4,7 +4,7 @@ from copy import copy
 import time
 from PySide import QtGui, QtCore
 import threading
-
+import rospy
 
 ##########
 
@@ -57,7 +57,8 @@ class MapViewer(QtGui.QWidget):
 
     def periodicUpdate(self):
         self.update()
-        threading.Timer(0.1, self.periodicUpdate).start() #re-run it in 0.1 second
+        if not rospy.is_shutdown():
+            threading.Timer(0.1, self.periodicUpdate).start() #re-run it in 0.1 second
 
     def set_opacity(self, value):
         v = float(value)/100  #Assume value in %

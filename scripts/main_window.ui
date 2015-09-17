@@ -302,7 +302,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>236</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">
@@ -389,7 +389,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>236</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">
@@ -450,9 +450,58 @@
               <item>
                <widget class="QPushButton" name="targetSendButton">
                 <property name="text">
-                 <string>Envoyer</string>
+                 <string>Emuler une détection</string>
                 </property>
                </widget>
+              </item>
+              <item>
+               <widget class="Line" name="line_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_15">
+                <item>
+                 <widget class="QComboBox" name="targetEndBox"/>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="targetEndButton">
+                  <property name="text">
+                   <string>Fin du suivi</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <item>
+                 <widget class="QComboBox" name="targetTrackBox"/>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="targetTrackButton">
+                  <property name="text">
+                   <string>Suivre cible</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <item>
+                 <widget class="QComboBox" name="targetRepairBox"/>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="targetRepairButton">
+                  <property name="text">
+                   <string>Reprendre mission</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <spacer name="verticalSpacer_3">
@@ -475,7 +524,7 @@
                <x>0</x>
                <y>0</y>
                <width>254</width>
-               <height>236</height>
+               <height>269</height>
               </rect>
              </property>
              <attribute name="label">
