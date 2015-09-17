@@ -50,8 +50,10 @@ class MapViewer(QtGui.QWidget):
         
         self.draw_coms = True
         self.draw_trails = True
+        self.draw_trajectories = False
         self.coms = [] # List of dict
         self.past_pos = {} #Each key is a robot, each value a list of dict
+        self.trajectories = {} #Each key is a robot, each value a list of dict
 
         self.periodicUpdate()
 
@@ -59,6 +61,13 @@ class MapViewer(QtGui.QWidget):
         self.update()
         if not rospy.is_shutdown():
             threading.Timer(0.1, self.periodicUpdate).start() #re-run it in 0.1 second
+
+    def set_draw_trajectory(self, b):
+        print("Drawing the trajectories ? %s" % b)
+        self.draw_trajectories = b
+
+    def set_trajectory(self, robot, path):
+        self.trajectories[robot] = path
 
     def set_opacity(self, value):
         v = float(value)/100  #Assume value in %
@@ -107,7 +116,7 @@ class MapViewer(QtGui.QWidget):
             agent_name = agent.get_name()
             (x, y) = self.viewport_from_map_mt( *agent.get_pos() )
             color = QtGui.QColor(agent.getColor())
-            pen = QtGui.QPen(color, 3, QtCore.Qt.SolidLine)            
+            pen = QtGui.QPen(color, 3, QtCore.Qt.SolidLine)
             painter.setPen(pen)
             self.plotMark(painter, x, y)
             painter.save()
@@ -152,8 +161,19 @@ class MapViewer(QtGui.QWidget):
                     self.past_pos[agent_name].append({"time":current_time, "pos":agent.get_pos()})
             # Remove the obsolete past positions
             self.past_pos[agent_name] = [d for d in self.past_pos[agent_name] if current_time < d["time"] + posTrailLength]
-            
-        
+
+            if self.draw_trajectories and agent_name in self.trajectories:
+                painter.save()
+                for d in self.trajectories[agent_name]:
+                    (x1, y1) = self.viewport_from_map_mt( d["start"]["x"], d["start"]["y"] )
+                    (x2, y2) = self.viewport_from_map_mt( d["end"]["x"], d["end"]["y"] )
+                    color = QtGui.QColor(agent.getColor())
+                    pen = QtGui.QPen(color, 3, QtCore.Qt.SolidLine)
+                    painter.setOpacity(0.5)
+                    painter.setPen(pen)
+                    painter.drawLine(x1, y1, x2, y2)
+                painter.restore()
+
         if self.draw_coms:
             for d in self.coms:
                 r1,r2 = d["from"],d["to"]
@@ -164,7 +184,7 @@ class MapViewer(QtGui.QWidget):
                 painter.drawLine(pos[r1][0], pos[r1][1], pos[r2][0], pos[r2][1])
                 
             self.coms = [d for d in self.coms if current_time < d["time"] + comTrailLength]
-        
+
         painter.end()
 
     def plotMark(self, painter, x, y, mark='x', size=12):

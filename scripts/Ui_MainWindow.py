@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Thu Sep 17 13:33:30 2015
+# Created: Thu Sep 17 14:25:49 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -54,6 +54,9 @@ class Ui_MainWindow(object):
         self.trailCheckBox.setChecked(True)
         self.trailCheckBox.setObjectName("trailCheckBox")
         self.horizontalLayout_11.addWidget(self.trailCheckBox)
+        self.trajCheckBox = QtGui.QCheckBox(self.groupBox)
+        self.trajCheckBox.setObjectName("trajCheckBox")
+        self.horizontalLayout_11.addWidget(self.trajCheckBox)
         self.verticalLayout_4.addLayout(self.horizontalLayout_11)
         self.label = QtGui.QLabel(self.groupBox)
         self.label.setEnabled(True)
@@ -313,8 +316,9 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "ISMAC", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Affichage", None, QtGui.QApplication.UnicodeUTF8))
-        self.comCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Communications", None, QtGui.QApplication.UnicodeUTF8))
+        self.comCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Com.", None, QtGui.QApplication.UnicodeUTF8))
         self.trailCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Traces", None, QtGui.QApplication.UnicodeUTF8))
+        self.trajCheckBox.setText(QtGui.QApplication.translate("MainWindow", "Traj.", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Transparence", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_2.setTitle(QtGui.QApplication.translate("MainWindow", "Opérateur Mission", None, QtGui.QApplication.UnicodeUTF8))
         self.vnetReloadButton.setText(QtGui.QApplication.translate("MainWindow", "MàJ vNet", None, QtGui.QApplication.UnicodeUTF8))
