@@ -342,7 +342,7 @@ class MainWindow(QtGui.QMainWindow):
                 self.ui.targetTrackBox.addItem(r)
                 self.ui.targetRepairBox.addItem(r)
 
-            self.ui.targetRepairBox.setCurrentIndex(0)
+            self.ui.targetTrackBox.setCurrentIndex(0)
             self.ui.targetRepairBox.setCurrentIndex(0)
 
             self.ui.targetTrackButton.setEnabled(True)
