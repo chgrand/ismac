@@ -218,7 +218,7 @@
             <item>
              <widget class="QPushButton" name="ubTargetButton">
               <property name="text">
-               <string>Durée max. suivi cible (s)</string>
+               <string>Max. attente consigne suivi (s)</string>
               </property>
              </widget>
             </item>
@@ -308,8 +308,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>254</width>
-               <height>269</height>
+               <width>216</width>
+               <height>177</height>
               </rect>
              </property>
              <attribute name="label">
@@ -395,8 +395,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>254</width>
-               <height>269</height>
+               <width>248</width>
+               <height>235</height>
               </rect>
              </property>
              <attribute name="label">
@@ -530,8 +530,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>254</width>
-               <height>269</height>
+               <width>217</width>
+               <height>175</height>
               </rect>
              </property>
              <attribute name="label">

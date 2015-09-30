@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_window.ui'
 #
-# Created: Thu Sep 17 14:25:49 2015
+# Created: Wed Sep 30 11:06:02 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -154,7 +154,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addItem(spacerItem, 4, 0, 1, 1)
         self.toolBox.addItem(self.page, "")
         self.page_2 = QtGui.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 254, 269))
+        self.page_2.setGeometry(QtCore.QRect(0, 0, 216, 177))
         self.page_2.setObjectName("page_2")
         self.verticalLayout_6 = QtGui.QVBoxLayout(self.page_2)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
@@ -191,7 +191,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.addItem(spacerItem1)
         self.toolBox.addItem(self.page_2, "")
         self.page_3 = QtGui.QWidget()
-        self.page_3.setGeometry(QtCore.QRect(0, 0, 254, 269))
+        self.page_3.setGeometry(QtCore.QRect(0, 0, 248, 235))
         self.page_3.setObjectName("page_3")
         self.verticalLayout_7 = QtGui.QVBoxLayout(self.page_3)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -257,7 +257,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addItem(spacerItem2)
         self.toolBox.addItem(self.page_3, "")
         self.page_4 = QtGui.QWidget()
-        self.page_4.setGeometry(QtCore.QRect(0, 0, 254, 269))
+        self.page_4.setGeometry(QtCore.QRect(0, 0, 217, 175))
         self.page_4.setObjectName("page_4")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.page_4)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
@@ -325,7 +325,7 @@ class Ui_MainWindow(object):
         self.startButton.setText(QtGui.QApplication.translate("MainWindow", "Début mission", None, QtGui.QApplication.UnicodeUTF8))
         self.stopButton.setText(QtGui.QApplication.translate("MainWindow", "Fin mission", None, QtGui.QApplication.UnicodeUTF8))
         self.ubComButton.setText(QtGui.QApplication.translate("MainWindow", "Attente max. com (s)", None, QtGui.QApplication.UnicodeUTF8))
-        self.ubTargetButton.setText(QtGui.QApplication.translate("MainWindow", "Durée max. suivi cible (s)", None, QtGui.QApplication.UnicodeUTF8))
+        self.ubTargetButton.setText(QtGui.QApplication.translate("MainWindow", "Max. attente consigne suivi (s)", None, QtGui.QApplication.UnicodeUTF8))
         self.paramLoadButton.setText(QtGui.QApplication.translate("MainWindow", "Recharger paramètres", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_3.setTitle(QtGui.QApplication.translate("MainWindow", "Opérateur simulation", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Robot tué", None, QtGui.QApplication.UnicodeUTF8))
